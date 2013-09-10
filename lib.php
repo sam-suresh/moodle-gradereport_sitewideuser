@@ -17,8 +17,9 @@
 /**
  * Definition of the grade_sitewideuser_report class is defined
  *
- * @package gradereport_sitewideuser
- * @copyright 2007 Nicolas Connault
+ * @package   gradereport_sitewideuser
+ * @copyright 2012 onwards Barry Oosthuizen http://elearningstudio.co.uk
+ * @author    Barry Oosthuizen
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

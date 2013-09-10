@@ -18,7 +18,8 @@
  * Strings for component 'gradereport_sitewideuser', language 'en'
  *
  * @package   gradereport_sitewideuser
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright 2012 onwards Barry Oosthuizen http://elearningstudio.co.uk
+ * @author    Barry Oosthuizen
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

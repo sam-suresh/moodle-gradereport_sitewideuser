@@ -17,11 +17,12 @@
 
 /**
  * The gradebook sitewide user report
- *
  * @package   gradereport_sitewideuser
- * @copyright 2007 Moodle Pty Ltd (http://moodle.com)
+ * @copyright 2012 onwards Barry Oosthuizen http://elearningstudio.co.uk
+ * @author    Barry Oosthuizen
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 require_once '../../../config.php';
 require_once $CFG->libdir . '/gradelib.php';
 require_once $CFG->dirroot . '/grade/lib.php';
@@ -121,7 +122,7 @@ echo '<br/><br/>';
 echo '<form method="post" action="index.php">';
 echo '<div id="categorylist">';
 echo '<ul class="unorderedlisttree" id="docheckchildren">';
-cc_print_whole_category_list_menu();
+gradereport_sitewideuser_print_category();
 
 echo '</ul>';
 echo '<div><input type="hidden" name="id" value="' . $courseid . '"/></div>';
