@@ -32,33 +32,27 @@ function gradereport_sitewideuser_print_category($category=NULL, $displaylist=NU
         } else {
             return;  // Don't bother printing children of invisible categories
         }
-
     } else {
         $category = new stdClass();
         $category->id = "0";
     }
 
-
-    if ($categories = get_child_categories($category->id)) {   // Print all the children recursively
+    if ($categories = coursecat::get($category->id)->get_children()) {   // Print all the children recursively
         $countcats = count($categories);
         $count = 0;
         $first = true;
         $last = false;
 
         foreach ($categories as $cat) {
-
             $count++;
-
             if ($count == $countcats) {
                 $last = true;
             }
-
             $up = $first ? false : true;
             $down = $last ? false : true;
             $first = false;
 
             gradereport_sitewideuser_print_category($cat, $displaylist, $parentslist, $depth + 1, $files);
-
             echo '</ul></li>';
         }
     }
@@ -72,8 +66,8 @@ function gradereport_sitewideuser_print_category($category=NULL, $displaylist=NU
  * @param type $files
  */
 function gradereport_sitewideuser_print_category_info($category, $depth, $files = false) {
-/// Prints the category info in indented fashion
-/// This function is only used by print_whole_category_list() above
+// Prints the category info in indented fashion
+// This function is only used by print_whole_category_list() above
     Global $CFG; Global $DB;
 
     $coursecount = $DB->count_records('course');
