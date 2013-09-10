@@ -16,7 +16,6 @@
  * @return type
  */
 function gradereport_sitewideuser_print_category($category=NULL, $displaylist=NULL, $parentslist=NULL, $depth=-1, $files = true) {
-
     Global $CFG;
     /// Recursive function to print out all the categories in a nice format
     /// with or without courses included
