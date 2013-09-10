@@ -18,7 +18,8 @@
  * Defines capabilities for the sitewide user report
  *
  * @package   gradereport_sitewideuser
- * @copyright 2007 onwards Martin Dougiamas (http://dougiamas.com)
+ * @copyright 2012 onwards Barry Oosthuizen http://elearningstudio.co.uk
+ * @author    Barry Oosthuizen
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

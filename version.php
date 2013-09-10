@@ -17,9 +17,10 @@
 /**
  * Version details for the site wide user gradebook report
  *
- * @package    gradereport_sitewideuser
- * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   gradereport_sitewideuser
+ * @copyright 2012 onwards Barry Oosthuizen http://elearningstudio.co.uk
+ * @author    Barry Oosthuizen
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();

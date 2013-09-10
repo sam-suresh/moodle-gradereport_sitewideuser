@@ -16,9 +16,9 @@
 
 /**
  * Renderer for the grade user report
- *
  * @package   gradereport_sitewideuser
- * @copyright 2010 Sam Hemelryk
+ * @copyright 2012 onwards Barry Oosthuizen http://elearningstudio.co.uk
+ * @author    Barry Oosthuizen
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
