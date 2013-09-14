@@ -21,16 +21,6 @@
  * @author    Barry Oosthuizen
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-/**
- * Custom renderer for the user grade report
- *
- * To get an instance of this use the following code:
- * $renderer = $PAGE->get_renderer('gradereport_sitewideuser');
- *
- * @copyright 2010 Sam Hemelryk
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 class gradereport_sitewideuser_renderer extends plugin_renderer_base {
 
     public function graded_users_selector($report, $course, $userid, $groupid, $includeall) {
