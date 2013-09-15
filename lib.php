@@ -163,10 +163,10 @@ class grade_report_sitewideuser extends grade_report {
         global $DB, $CFG;
         parent::__construct($courseid, $gpr, $context);
 
-        $this->showrank        = grade_get_setting($this->courseid, 'report_sitewideuser_showrank', $CFG->grade_report_sitewideuser_showrank);
-        $this->showpercentage  = grade_get_setting($this->courseid, 'report_sitewideuser_showpercentage', $CFG->grade_report_sitewideuser_showpercentage);
-        $this->showhiddenitems = grade_get_setting($this->courseid, 'report_sitewideuser_showhiddenitems', $CFG->grade_report_sitewideuser_showhiddenitems);
-        $this->showtotalsifcontainhidden = array($this->courseid => grade_get_setting($this->courseid, 'report_user_showtotalsifcontainhidden', $CFG->grade_report_user_showtotalsifcontainhidden));
+        $this->showrank        = grade_get_setting($this->courseid, 'report_sitewideuser_showrank', !empty($CFG->grade_report_sitewideuser_showrank));
+        $this->showpercentage  = grade_get_setting($this->courseid, 'report_sitewideuser_showpercentage', !empty($CFG->grade_report_sitewideuser_showpercentage));
+        $this->showhiddenitems = grade_get_setting($this->courseid, 'report_sitewideuser_showhiddenitems', !empty($CFG->grade_report_sitewideuser_showhiddenitems));
+        $this->showtotalsifcontainhidden = array($this->courseid => grade_get_setting($this->courseid, 'report_user_showtotalsifcontainhidden', !empty($CFG->grade_report_user_showtotalsifcontainhidden)));
 
         $this->showgrade       = grade_get_setting($this->courseid, 'report_sitewideuser_showgrade',       !empty($CFG->grade_report_sitewideuser_showgrade));
         $this->showrange       = grade_get_setting($this->courseid, 'report_sitewideuser_showrange',       !empty($CFG->grade_report_sitewideuser_showrange));
@@ -906,5 +906,3 @@ function grade_report_sitewideuser_profilereport($course, $user) {
         echo '</div>';
     }
 }
-
-
