@@ -27,7 +27,7 @@ require_once '../../../config.php';
 require_once $CFG->libdir . '/gradelib.php';
 require_once $CFG->dirroot . '/grade/lib.php';
 require_once $CFG->dirroot . '/grade/report/sitewideuser/lib.php';
-
+require_once $CFG->libdir . '/coursecatlib.php';
 require_once $CFG->dirroot . '/grade/report/sitewideuser/categorylib.php';
 
 // check box tree insert
