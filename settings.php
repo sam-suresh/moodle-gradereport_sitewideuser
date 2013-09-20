@@ -27,25 +27,4 @@ defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
 
-    $settings->add(new admin_setting_configcheckbox('grade_report_sitewideuser_showrank', get_string('showrank', 'grades'), get_string('showrank_help', 'grades'), 0));
-    $settings->add(new admin_setting_configcheckbox('grade_report_sitewideuser_showpercentage', get_string('showpercentage', 'grades'), get_string('showpercentage_help', 'grades'), 1));
-    $settings->add(new admin_setting_configcheckbox('grade_report_sitewideuser_showgrade', get_string('showgrade', 'grades'), get_string('showgrade_help', 'grades'), 1));
-    $settings->add(new admin_setting_configcheckbox('grade_report_sitewideuser_showfeedback', get_string('showfeedback', 'grades'), get_string('showfeedback_help', 'grades'), 1));
-    $settings->add(new admin_setting_configcheckbox('grade_report_sitewideuser_showrange', get_string('showrange', 'grades'), get_string('showrange_help', 'grades'), 1));
-    $settings->add(new admin_setting_configcheckbox('grade_report_sitewideuser_showweight', get_string('showweight', 'grades'), get_string('showweight_help', 'grades'), 0));
-    $settings->add(new admin_setting_configcheckbox('grade_report_sitewideuser_showaverage', get_string('showaverage', 'grades'), get_string('showaverage_help', 'grades'), 0));
-    $settings->add(new admin_setting_configcheckbox('grade_report_sitewideuser_showlettergrade', get_string('showlettergrade', 'grades'), get_string('showlettergrade_help', 'grades'), 0));
-    $settings->add(new admin_setting_configselect('grade_report_sitewideuser_rangedecimals', get_string('rangedecimals', 'grades'),
-            get_string('rangedecimals_help', 'grades'), 0,array(0=>0, 1=>1, 2=>2, 3=>3, 4=>4, 5=>5)));
-
-    $options = array(0 => get_string('shownohidden', 'grades'),
-                     1 => get_string('showhiddenuntilonly', 'grades'),
-                     2 => get_string('showallhidden', 'grades'));
-    $settings->add(new admin_setting_configselect('grade_report_sitewideuser_showhiddenitems', get_string('showhiddenitems', 'grades'), get_string('showhiddenitems_help', 'grades'), 1, $options));
-
-    $settings->add(new admin_setting_configselect('grade_report_sitewideuser_showtotalsifcontainhidden', get_string('hidetotalifhiddenitems', 'grades'),
-                                                      get_string('hidetotalifhiddenitems_help', 'grades'), GRADE_REPORT_HIDE_TOTAL_IF_CONTAINS_HIDDEN,
-                                                      array(GRADE_REPORT_HIDE_TOTAL_IF_CONTAINS_HIDDEN => get_string('hide'),
-                                                            GRADE_REPORT_SHOW_TOTAL_IF_CONTAINS_HIDDEN => get_string('hidetotalshowexhiddenitems', 'grades'),
-                                                            GRADE_REPORT_SHOW_REAL_TOTAL_IF_CONTAINS_HIDDEN => get_string('hidetotalshowinchiddenitems', 'grades'))));
 }
