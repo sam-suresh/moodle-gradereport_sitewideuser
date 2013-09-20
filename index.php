@@ -145,50 +145,32 @@ if($formsubmitted === "Yes") {
     foreach ($coursebox as $id => $value) {
         $selectedcourses[] = $value;
     }
-    $courselist = implode(",", $selectedcourses);
-    $sql = "select * FROM mdl_course WHERE id IN(".$courselist.") ORDER BY shortname";
-    $courses = $DB->get_records_sql($sql);
-	
-    foreach ($courses as $thiscourse) {
 
-        $courseid = $thiscourse->id;
+    if (!empty($selectedcourses)) {
+        list($courselist, $params) = $DB->get_in_or_equal($selectedcourses, SQL_PARAMS_NAMED, 'm', false);
+        $sql = "select * FROM {course} WHERE id $courselist ORDER BY shortname";
+        $courses = $DB->get_records_sql($sql, $params);
 
-        // return tracking object
-        $gpr = new grade_plugin_return(array('type'=>'report', 'plugin'=>'sitewideuser', 'courseid'=>$courseid, 'userid'=>$userid));
-        //first make sure we have proper final grades - this must be done before constructing of the grade tree
-        /// basic access checks
-        if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-            print_error('nocourseid');
-        }
-        $context = get_context_instance(CONTEXT_COURSE, $thiscourse->id);
-        grade_regrade_final_grades($courseid);
+        foreach ($courses as $thiscourse) {
 
-        if (has_capability('moodle/grade:viewall', $context)) { //Teachers will see all student reports
-            if (has_capability('gradereport/sitewideuser:view', $context)) {
-                // Print graded user selector at the top
+            $courseid = $thiscourse->id;
 
-                if (empty($userid)) {
-                    $gui = new graded_users_iterator($thiscourse, null, $currentgroup);
-                    $gui->init();
-                    // Add tabs
+            // return tracking object
+            $gpr = new grade_plugin_return(array('type'=>'report', 'plugin'=>'sitewideuser', 'courseid'=>$courseid, 'userid'=>$userid));
+            //first make sure we have proper final grades - this must be done before constructing of the grade tree
+            /// basic access checks
+            if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+                print_error('nocourseid');
+            }
+            $context = get_context_instance(CONTEXT_COURSE, $thiscourse->id);
+            grade_regrade_final_grades($courseid);
 
-                    while ($userdata = $gui->next_user()) {
-                        $user = $userdata->user;
-                        $report = new grade_report_sitewideuser($courseid, $gpr, $context, $user->id);
-                        //print_heading('<a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'">'.$thiscourse->shortname.'</a> - '.get_string('modulename', 'gradereport_sitewideuser').'- <a href="'.$CFG->wwwroot.'/grade/report/sitewideuser/index.php?id='.$thiscourse->id.'&amp;userid='.$user->id.'">'.fullname($report->user).'</a>');
-                        echo('<a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'">'.$thiscourse->shortname.'</a> - '.get_string('pluginname', 'gradereport_user').'- <a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'&amp;userid='.$user->id.'">'.fullname($report->user).'</a>');
+            if (has_capability('moodle/grade:viewall', $context)) { //Teachers will see all student reports
+                if (has_capability('gradereport/sitewideuser:view', $context)) {
+                    // Print graded user selector at the top
 
-                        if ($report->fill_table()) {
-                            echo '<br />'.$report->print_table(true);
-                        }
-                        echo "<p style = 'page-break-after: always;'></p>";
-                    }
-                    $gui->close();
-                } else { // Only show one user's report
-                    
-                    if ($userid == $USER->id) {
-                        
-                        $gui = new graded_users_iterator($thiscourse, null);
+                    if (empty($userid)) {
+                        $gui = new graded_users_iterator($thiscourse, null, $currentgroup);
                         $gui->init();
                         // Add tabs
 
@@ -197,44 +179,65 @@ if($formsubmitted === "Yes") {
                             $report = new grade_report_sitewideuser($courseid, $gpr, $context, $user->id);
                             //print_heading('<a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'">'.$thiscourse->shortname.'</a> - '.get_string('modulename', 'gradereport_sitewideuser').'- <a href="'.$CFG->wwwroot.'/grade/report/sitewideuser/index.php?id='.$thiscourse->id.'&amp;userid='.$user->id.'">'.fullname($report->user).'</a>');
                             echo('<a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'">'.$thiscourse->shortname.'</a> - '.get_string('pluginname', 'gradereport_user').'- <a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'&amp;userid='.$user->id.'">'.fullname($report->user).'</a>');
-                            
+
                             if ($report->fill_table()) {
                                 echo '<br />'.$report->print_table(true);
                             }
                             echo "<p style = 'page-break-after: always;'></p>";
                         }
                         $gui->close();
-                    } else {
-                       
+                    } else { // Only show one user's report
 
-                        $report = new grade_report_sitewideuser($courseid, $gpr, $context, $userid);
+                        if ($userid == $USER->id) {
 
-                        //print_heading('<a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'">'.$thiscourse->shortname.'</a> - '.get_string('modulename', 'gradereport_sitewideuser').'- <a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'&amp;userid='.$userid.'">'.fullname($report->user).'</a>');
-                        echo('<a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'">'.$thiscourse->shortname.'</a> - '.get_string('pluginname', 'gradereport_user').'- <a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'&amp;userid='.$userid.'">'.fullname($report->user).'</a>');
+                            $gui = new graded_users_iterator($thiscourse, null);
+                            $gui->init();
+                            // Add tabs
 
-                        if ($report->fill_table()) {
-                            echo '<br />'.$report->print_table(true);
+                            while ($userdata = $gui->next_user()) {
+                                $user = $userdata->user;
+                                $report = new grade_report_sitewideuser($courseid, $gpr, $context, $user->id);
+                                //print_heading('<a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'">'.$thiscourse->shortname.'</a> - '.get_string('modulename', 'gradereport_sitewideuser').'- <a href="'.$CFG->wwwroot.'/grade/report/sitewideuser/index.php?id='.$thiscourse->id.'&amp;userid='.$user->id.'">'.fullname($report->user).'</a>');
+                                echo('<a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'">'.$thiscourse->shortname.'</a> - '.get_string('pluginname', 'gradereport_user').'- <a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'&amp;userid='.$user->id.'">'.fullname($report->user).'</a>');
+
+                                if ($report->fill_table()) {
+                                    echo '<br />'.$report->print_table(true);
+                                }
+                                echo "<p style = 'page-break-after: always;'></p>";
+                            }
+                            $gui->close();
+                        } else {
+
+
+                            $report = new grade_report_sitewideuser($courseid, $gpr, $context, $userid);
+
+                            //print_heading('<a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'">'.$thiscourse->shortname.'</a> - '.get_string('modulename', 'gradereport_sitewideuser').'- <a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'&amp;userid='.$userid.'">'.fullname($report->user).'</a>');
+                            echo('<a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'">'.$thiscourse->shortname.'</a> - '.get_string('pluginname', 'gradereport_user').'- <a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'&amp;userid='.$userid.'">'.fullname($report->user).'</a>');
+
+                            if ($report->fill_table()) {
+                                echo '<br />'.$report->print_table(true);
+                            }
+                            echo "<p style = 'page-break-after: always;'></p>";
+
                         }
-                        echo "<p style = 'page-break-after: always;'></p>";
-
                     }
-                }
-              } else {
-                  echo 'You do not have permission to use this report';
-              }
-        } else { //Students will see just their own report
-            if (has_capability('gradereport/sitewideuser:view', $context)) {
-                // Create a report instance
-                $report = new grade_report_sitewideuser($courseid, $gpr, $context, $USER->id);
+                  } else {
+                      echo 'You do not have permission to use this report';
+                  }
+            } else { //Students will see just their own report
+                if (has_capability('gradereport/sitewideuser:view', $context)) {
+                    // Create a report instance
+                    $report = new grade_report_sitewideuser($courseid, $gpr, $context, $USER->id);
 
-                // print the page
-                //print_heading('<a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'">'.$thiscourse->shortname.'</a> - '.get_string('modulename', 'gradereport_sitewideuser').'- <a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'&amp;userid='.$USER->id.'">'.fullname($report->user).'</a>');
-                echo('<a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'">'.$thiscourse->shortname.'</a> - '.get_string('pluginname', 'gradereport_user').'- <a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'&amp;userid='.$USER->id.'">'.fullname($report->user).'</a>');
+                    // print the page
+                    //print_heading('<a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'">'.$thiscourse->shortname.'</a> - '.get_string('modulename', 'gradereport_sitewideuser').'- <a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'&amp;userid='.$USER->id.'">'.fullname($report->user).'</a>');
+                    echo('<a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'">'.$thiscourse->shortname.'</a> - '.get_string('pluginname', 'gradereport_user').'- <a href="'.$CFG->wwwroot.'/grade/report/user/index.php?id='.$thiscourse->id.'&amp;userid='.$USER->id.'">'.fullname($report->user).'</a>');
 
-                if ($report->fill_table()) {
-                    echo '<br />'.$report->print_table(true);
+                    if ($report->fill_table()) {
+                        echo '<br />'.$report->print_table(true);
+                    }
+                    echo "<p style = 'page-break-after: always;'></p>";
                 }
-                echo "<p style = 'page-break-after: always;'></p>";
             }
         }
     }
