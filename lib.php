@@ -26,11 +26,6 @@
 require_once($CFG->dirroot . '/grade/report/lib.php');
 require_once($CFG->libdir.'/tablelib.php');
 
-//showhiddenitems values
-define("GRADE_REPORT_SITEWIDEUSER_HIDE_HIDDEN", 0);
-define("GRADE_REPORT_SITEWIDEUSER_HIDE_UNTIL", 1);
-define("GRADE_REPORT_SITEWIDEUSER_SHOW_HIDDEN", 2);
-
 /**
  * Class providing an API for the user report building and displaying.
  * @uses grade_report
@@ -163,17 +158,17 @@ class grade_report_sitewideuser extends grade_report {
         global $DB, $CFG;
         parent::__construct($courseid, $gpr, $context);
 
-        $this->showrank        = grade_get_setting($this->courseid, 'report_sitewideuser_showrank', !empty($CFG->grade_report_sitewideuser_showrank));
-        $this->showpercentage  = grade_get_setting($this->courseid, 'report_sitewideuser_showpercentage', !empty($CFG->grade_report_sitewideuser_showpercentage));
-        $this->showhiddenitems = grade_get_setting($this->courseid, 'report_sitewideuser_showhiddenitems', !empty($CFG->grade_report_sitewideuser_showhiddenitems));
+        $this->showrank        = grade_get_setting($this->courseid, 'report_sitewideuser_showrank', !empty($CFG->grade_report_user_showrank));
+        $this->showpercentage  = grade_get_setting($this->courseid, 'report_sitewideuser_showpercentage', !empty($CFG->grade_report_user_showpercentage));
+        $this->showhiddenitems = grade_get_setting($this->courseid, 'report_sitewideuser_showhiddenitems', !empty($CFG->grade_report_user_showhiddenitems));
         $this->showtotalsifcontainhidden = array($this->courseid => grade_get_setting($this->courseid, 'report_user_showtotalsifcontainhidden', !empty($CFG->grade_report_user_showtotalsifcontainhidden)));
 
-        $this->showgrade       = grade_get_setting($this->courseid, 'report_sitewideuser_showgrade',       !empty($CFG->grade_report_sitewideuser_showgrade));
-        $this->showrange       = grade_get_setting($this->courseid, 'report_sitewideuser_showrange',       !empty($CFG->grade_report_sitewideuser_showrange));
-        $this->showfeedback    = grade_get_setting($this->courseid, 'report_sitewideuser_showfeedback',    !empty($CFG->grade_report_sitewideuser_showfeedback));
-        $this->showweight      = grade_get_setting($this->courseid, 'report_sitewideuser_showweight',      !empty($CFG->grade_report_sitewideuser_showweight));
-        $this->showlettergrade = grade_get_setting($this->courseid, 'report_sitewideuser_showlettergrade', !empty($CFG->grade_report_sitewideuser_showlettergrade));
-        $this->showaverage     = grade_get_setting($this->courseid, 'report_sitewideuser_showaverage',     !empty($CFG->grade_report_sitewideuser_showaverage));
+        $this->showgrade       = grade_get_setting($this->courseid, 'report_sitewideuser_showgrade',       !empty($CFG->grade_report_user_showgrade));
+        $this->showrange       = grade_get_setting($this->courseid, 'report_sitewideuser_showrange',       !empty($CFG->grade_report_user_showrange));
+        $this->showfeedback    = grade_get_setting($this->courseid, 'report_sitewideuser_showfeedback',    !empty($CFG->grade_report_user_showfeedback));
+        $this->showweight      = grade_get_setting($this->courseid, 'report_sitewideuser_showweight',      !empty($CFG->grade_report_user_showweight));
+        $this->showlettergrade = grade_get_setting($this->courseid, 'report_sitewideuser_showlettergrade', !empty($CFG->grade_report_user_showlettergrade));
+        $this->showaverage     = grade_get_setting($this->courseid, 'report_sitewideuser_showaverage',     !empty($CFG->grade_report_user_showaverage));
 
         // The default grade decimals is 2
         $defaultdecimals = 2;
@@ -185,7 +180,7 @@ class grade_report_sitewideuser extends grade_report {
         // The default range decimals is 0
         $defaultrangedecimals = 0;
         if (property_exists($CFG, 'grade_report_sitewideuser_rangedecimals')) {
-            $defaultrangedecimals = $CFG->grade_report_sitewideuser_rangedecimals;
+            $defaultrangedecimals = $CFG->grade_report_user_rangedecimals;
         }
         $this->rangedecimals = grade_get_setting($this->courseid, 'report_sitewideuser_rangedecimals', $defaultrangedecimals);
 
@@ -326,8 +321,8 @@ class grade_report_sitewideuser extends grade_report {
 
         // If this is a hidden grade category, hide it completely from the user
         if ($type == 'category' && $grade_object->is_hidden() && !$this->canviewhidden && (
-                $this->showhiddenitems == GRADE_REPORT_SITEWIDEUSER_HIDE_HIDDEN ||
-                ($this->showhiddenitems == GRADE_REPORT_SITEWIDEUSER_HIDE_UNTIL && !$grade_object->is_hiddenuntil()))) {
+                $this->showhiddenitems == GRADE_REPORT_USER_HIDE_HIDDEN ||
+                ($this->showhiddenitems == GRADE_REPORT_USER_HIDE_UNTIL && !$grade_object->is_hiddenuntil()))) {
             return false;
         }
 
@@ -354,8 +349,8 @@ class grade_report_sitewideuser extends grade_report {
             $hide = false;
             // If this is a hidden grade item, hide it completely from the user.
             if ($grade_grade->is_hidden() && !$this->canviewhidden && (
-                    $this->showhiddenitems == GRADE_REPORT_SITEWIDEUSER_HIDE_HIDDEN ||
-                    ($this->showhiddenitems == GRADE_REPORT_SITEWIDEUSER_HIDE_UNTIL && !$grade_grade->is_hiddenuntil()))) {
+                    $this->showhiddenitems == GRADE_REPORT_USER_HIDE_HIDDEN ||
+                    ($this->showhiddenitems == GRADE_REPORT_USER_HIDE_UNTIL && !$grade_grade->is_hiddenuntil()))) {
                 $hide = true;
             } else if (!empty($grade_object->itemmodule) && !empty($grade_object->iteminstance)) {
                 // The grade object can be marked visible but still be hidden if...
@@ -779,7 +774,7 @@ function grade_report_sitewideuser_settings_definition(&$mform) {
                       0 => get_string('hide'),
                       1 => get_string('show'));
 
-    if (empty($CFG->grade_report_sitewideuser_showrank)) {
+    if (empty($CFG->grade_report_user_showrank)) {
         $options[-1] = get_string('defaultprev', 'grades', $options[0]);
     } else {
         $options[-1] = get_string('defaultprev', 'grades', $options[1]);
@@ -788,7 +783,7 @@ function grade_report_sitewideuser_settings_definition(&$mform) {
     $mform->addElement('select', 'report_sitewideuser_showrank', get_string('showrank', 'grades'), $options);
     $mform->addHelpButton('report_sitewideuser_showrank', 'showrank', 'grades');
 
-    if (empty($CFG->grade_report_sitewideuser_showpercentage)) {
+    if (empty($CFG->grade_report_user_showpercentage)) {
         $options[-1] = get_string('defaultprev', 'grades', $options[0]);
     } else {
         $options[-1] = get_string('defaultprev', 'grades', $options[1]);
@@ -797,7 +792,7 @@ function grade_report_sitewideuser_settings_definition(&$mform) {
     $mform->addElement('select', 'report_sitewideuser_showpercentage', get_string('showpercentage', 'grades'), $options);
     $mform->addHelpButton('report_sitewideuser_showpercentage', 'showpercentage', 'grades');
 
-    if (empty($CFG->grade_report_sitewideuser_showgrade)) {
+    if (empty($CFG->grade_report_user_showgrade)) {
         $options[-1] = get_string('defaultprev', 'grades', $options[0]);
     } else {
         $options[-1] = get_string('defaultprev', 'grades', $options[1]);
@@ -805,7 +800,7 @@ function grade_report_sitewideuser_settings_definition(&$mform) {
 
     $mform->addElement('select', 'report_sitewideuser_showgrade', get_string('showgrade', 'grades'), $options);
 
-    if (empty($CFG->grade_report_sitewideuser_showfeedback)) {
+    if (empty($CFG->grade_report_user_showfeedback)) {
         $options[-1] = get_string('defaultprev', 'grades', $options[0]);
     } else {
         $options[-1] = get_string('defaultprev', 'grades', $options[1]);
@@ -813,7 +808,7 @@ function grade_report_sitewideuser_settings_definition(&$mform) {
 
     $mform->addElement('select', 'report_sitewideuser_showfeedback', get_string('showfeedback', 'grades'), $options);
 
-    if (empty($CFG->grade_report_sitewideuser_showweight)) {
+    if (empty($CFG->grade_report_user_showweight)) {
         $options[-1] = get_string('defaultprev', 'grades', $options[0]);
     } else {
         $options[-1] = get_string('defaultprev', 'grades', $options[1]);
@@ -821,7 +816,7 @@ function grade_report_sitewideuser_settings_definition(&$mform) {
 
     $mform->addElement('select', 'report_sitewideuser_showweight', get_string('showweight', 'grades'), $options);
 
-    if (empty($CFG->grade_report_sitewideuser_showaverage)) {
+    if (empty($CFG->grade_report_user_showaverage)) {
         $options[-1] = get_string('defaultprev', 'grades', $options[0]);
     } else {
         $options[-1] = get_string('defaultprev', 'grades', $options[1]);
@@ -830,7 +825,7 @@ function grade_report_sitewideuser_settings_definition(&$mform) {
     $mform->addElement('select', 'report_sitewideuser_showaverage', get_string('showaverage', 'grades'), $options);
     $mform->addHelpButton('report_sitewideuser_showaverage', 'showaverage', 'grades');
 
-    if (empty($CFG->grade_report_sitewideuser_showlettergrade)) {
+    if (empty($CFG->grade_report_user_showlettergrade)) {
         $options[-1] = get_string('defaultprev', 'grades', $options[0]);
     } else {
         $options[-1] = get_string('defaultprev', 'grades', $options[1]);
@@ -838,7 +833,7 @@ function grade_report_sitewideuser_settings_definition(&$mform) {
 
     $mform->addElement('select', 'report_sitewideuser_showlettergrade', get_string('showlettergrade', 'grades'), $options);
 
-    if (empty($CFG->grade_report_sitewideuser_showrange)) {
+    if (empty($CFG->grade_report_user_showrange)) {
         $options[-1] = get_string('defaultprev', 'grades', $options[0]);
     } else {
         $options[-1] = get_string('defaultprev', 'grades', $options[1]);
@@ -847,8 +842,8 @@ function grade_report_sitewideuser_settings_definition(&$mform) {
     $mform->addElement('select', 'report_sitewideuser_showrange', get_string('showrange', 'grades'), $options);
 
     $options = array(0=>0, 1=>1, 2=>2, 3=>3, 4=>4, 5=>5);
-    if (! empty($CFG->grade_report_sitewideuser_rangedecimals)) {
-        $options[-1] = $options[$CFG->grade_report_sitewideuser_rangedecimals];
+    if (! empty($CFG->grade_report_user_rangedecimals)) {
+        $options[-1] = $options[$CFG->grade_report_user_rangedecimals];
     }
     $mform->addElement('select', 'report_sitewideuser_rangedecimals', get_string('rangedecimals', 'grades'), $options);
 
@@ -857,10 +852,10 @@ function grade_report_sitewideuser_settings_definition(&$mform) {
                       1 => get_string('showhiddenuntilonly', 'grades'),
                       2 => get_string('showallhidden', 'grades'));
 
-    if (empty($CFG->grade_report_sitewideuser_showhiddenitems)) {
+    if (empty($CFG->grade_report_user_showhiddenitems)) {
         $options[-1] = get_string('defaultprev', 'grades', $options[0]);
     } else {
-        $options[-1] = get_string('defaultprev', 'grades', $options[$CFG->grade_report_sitewideuser_showhiddenitems]);
+        $options[-1] = get_string('defaultprev', 'grades', $options[$CFG->grade_report_user_showhiddenitems]);
     }
 
     $mform->addElement('select', 'report_sitewideuser_showhiddenitems', get_string('showhiddenitems', 'grades'), $options);
@@ -872,10 +867,10 @@ function grade_report_sitewideuser_settings_definition(&$mform) {
                       GRADE_REPORT_SHOW_TOTAL_IF_CONTAINS_HIDDEN => get_string('hidetotalshowexhiddenitems', 'grades'),
                       GRADE_REPORT_SHOW_REAL_TOTAL_IF_CONTAINS_HIDDEN => get_string('hidetotalshowinchiddenitems', 'grades') );
 
-    if (empty($CFG->grade_report_sitewideuser_showtotalsifcontainhidden)) {
+    if (empty($CFG->grade_report_user_showtotalsifcontainhidden)) {
         $options[-1] = get_string('defaultprev', 'grades', $options[0]);
     } else {
-        $options[-1] = get_string('defaultprev', 'grades', $options[$CFG->grade_report_sitewideuser_showtotalsifcontainhidden]);
+        $options[-1] = get_string('defaultprev', 'grades', $options[$CFG->grade_report_user_showtotalsifcontainhidden]);
     }
 
     $mform->addElement('select', 'report_sitewideuser_showtotalsifcontainhidden', get_string('hidetotalifhiddenitems', 'grades'), $options);
