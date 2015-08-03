@@ -29,4 +29,4 @@ $plugin->version   = 2013092100;        // The current plugin version (Date: YYY
 $plugin->requires  = 2013040500;        // Requires this Moodle version
 $plugin->component = 'gradereport_sitewideuser'; // Full name of the plugin (used for diagnostics)
 $plugin->maturity  = MATURITY_ALPHA;
-$plugin->release   = '0.9.3';
+$plugin->release   = '0.9.4';
