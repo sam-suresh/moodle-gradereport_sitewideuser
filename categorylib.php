@@ -27,7 +27,7 @@ function gradereport_sitewideuser_print_category($category=NULL, $displaylist=NU
     
     if ($category) {
 
-        if ($category->visible or has_capability('moodle/course:update', get_context_instance(CONTEXT_SYSTEM))) {
+        if ($category->visible or has_capability('moodle/course:update', context_system::instance())) {
             gradereport_sitewideuser_print_category_info($category, $depth, $files);
         } else {
             return;  // Don't bother printing children of invisible categories

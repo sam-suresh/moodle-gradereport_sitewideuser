@@ -199,7 +199,7 @@ class grade_report_sitewideuser extends grade_report {
 
         $this->tabledata = array();
 
-        $this->canviewhidden = has_capability('moodle/grade:viewhidden', get_context_instance(CONTEXT_COURSE, $this->courseid));
+        $this->canviewhidden = has_capability('moodle/grade:viewhidden', context_course::instance($this->courseid));
 
         // get the user (for full name)
         $this->user = $DB->get_record('user', array('id' => $userid));

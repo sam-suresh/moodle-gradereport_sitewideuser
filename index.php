@@ -31,11 +31,10 @@ require_once $CFG->dirroot . '/grade/report/sitewideuser/categorylib.php';
 
 // check box tree insert
 
-$PAGE->requires->js('/grade/report/sitewideuser/checkboxtree/js/jquery-latest.js', true);
-$PAGE->requires->js('/grade/report/sitewideuser/checkboxtree/js/jquery-ui.min.js', true);
-$PAGE->requires->js('/grade/report/sitewideuser/checkboxtree/js/jquery.checkboxtree.js', true);
-
-$PAGE->requires->css('/grade/report/sitewideuser/checkboxtree/css/themes/base/ui.all.css');
+$PAGE->requires->jquery();
+$PAGE->requires->jquery_plugin('ui');
+$PAGE->requires->jquery_plugin('ui-css');
+$PAGE->requires->jquery_plugin('checkboxtree', 'gradereport_sitewideuser');
 $PAGE->requires->css('/grade/report/sitewideuser/checkboxtree/css/checkboxtree.css');
 
 // end of insert
@@ -54,7 +53,7 @@ if (!$course = $DB->get_record('course', array('id' => $courseid))) {
 require_login($course);
 $PAGE->set_pagelayout('report');
 
-$context = get_context_instance(CONTEXT_COURSE, $course->id);
+$context = context_course::instance($course->id);
 require_capability('gradereport/sitewideuser:view', $context);
 
 if (empty($userid)) {
@@ -72,7 +71,7 @@ if (has_capability('moodle/grade:viewall', $context)) {
 } else if ($userid == $USER->id and has_capability('moodle/grade:view', $context) and $course->showgrades) {
     //ok - can view own grades
     $access = true;
-} else if (has_capability('moodle/grade:viewall', get_context_instance(CONTEXT_USER, $userid)) and $course->showgrades) {
+} else if (has_capability('moodle/grade:viewall', context_user::instance($userid)) and $course->showgrades) {
     // ok - can view grades of this user- parent most probably
     $access = true;
 }
@@ -161,7 +160,7 @@ if($formsubmitted === "Yes") {
             if (!$course = $DB->get_record('course', array('id' => $courseid))) {
                 print_error('nocourseid');
             }
-            $context = get_context_instance(CONTEXT_COURSE, $thiscourse->id);
+            $context = context_course::instance($thiscourse->id);
             grade_regrade_final_grades($courseid);
 
             if (has_capability('moodle/grade:viewall', $context)) { //Teachers will see all student reports
