@@ -421,7 +421,8 @@ class grade_report_sitewideuser extends grade_report {
                             $data['grade']['content'] = '-';
                     } else {
                         $data['grade']['class'] = $class;
-                        $gradeval = $this->blank_hidden_total($this->courseid, $grade_grade->grade_item, $gradeval);
+                        $gradedetails = $this->blank_hidden_total_and_adjust_bounds($this->courseid, $grade_grade->grade_item, $gradeval);
+                        $gradeval = $gradedetails['grade'];
                         $data['grade']['content'] = grade_format_gradevalue($gradeval, $grade_grade->grade_item, true);
                     }
                 }
